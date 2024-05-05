@@ -1,4 +1,7 @@
-<ins># Buck Converter Design</ins>
+<p align="center">
+<ins> Buck Converter Design </ins>
+</p> 
+
 ## Buck Converter Design
 Before reading this section, please read the [Introduction](http://www.simonbramble.co.uk/dc_dc_converter_design/dc_dc_converter_design.htm).
 
