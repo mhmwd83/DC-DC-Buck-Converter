@@ -8,7 +8,8 @@ In order to efficiently reduce a high voltage to a lower voltage, a buck dc/dc c
 
 Consider the circuit of FIG 1.
 <h3 align="center">
-  <img src="[https://media.giphy.com/media/hvRJCLFzcasrR4ia7z/giphy.gif" width="28](https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/07f1d989-2a3d-40a4-9845-ac19e6008b19)">
+  <img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/07f1d989-2a3d-40a4-9845-ac19e6008b19" width="28">
+</h3>
 </h3>
 
 <h4 align="center"> 
