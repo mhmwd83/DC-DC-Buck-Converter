@@ -48,9 +48,8 @@ When MOSFET Q2 switches on, it also provides a short circuit to 0V at the bottom
 <img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/5c6c75d3-8ec6-4c9c-8240-52c86b8d7463">
 </p>
 
+where V is the voltage across the inductor and is equal to the output voltage (since the left hand side of the inductor is clamped to 0V by MOSFET Q2).
 
- 
-
-where V is the voltage across the inductor and is equal to the output voltage (since the left hand side of the inductor is clamped to 0V by MOSFET Q2)
+The LTspice model of FIG 1 can be downloaded here (right click over the link and save as a '.asc' file): [LTC3854 buck converter](http://www.simonbramble.co.uk/dc_dc_converter_design/buck_converter/ltc3854_buck_converter.asc).
 
 
