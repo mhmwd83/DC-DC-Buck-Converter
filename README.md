@@ -9,7 +9,7 @@ In order to efficiently reduce a high voltage to a lower voltage, a buck dc/dc c
 Consider the circuit of FIG 1.
 
 <p align="center">
-<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/07f1d989-2a3d-40a4-9845-ac19e6008b19"  align="center" >
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/07f1d989-2a3d-40a4-9845-ac19e6008b19">
 </p> 
 
 <h3 align="center"> 
@@ -18,7 +18,9 @@ Consider the circuit of FIG 1.
 
 The top MOSFET switches on creating a short circuit between the input voltage (IN) and the left hand side of the inductor, L1. The inductor current ramps up according to the equation
 
+<p align="center">
 <img align="center" src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/225f0375-8c17-424e-b593-08932ac474ab">
+</p> 
 
 where V is the voltage ***across*** the inductor, L is the inductance value and di/dt is the ***change*** in current with time through the inductor. Thus with a fixed input voltage and a fixed output voltage, there is a fixed voltage across the inductor thus the change in current with time is constant (i.e. a ramp waveform).
 
