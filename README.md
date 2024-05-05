@@ -68,5 +68,25 @@ we can determine that change in current when the inductor is charging is
 <img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/2e2961be-6f20-4bce-a35d-d7ae9e8675be">
 </p>
 
+or 1,166,666 Amps per second.
+When the inductor is discharging (when Q2 is on), the inductor discharges according to the equation
 
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/85aec801-e4eb-436a-a815-bff0c6482ac8">
+</p>
 
+or
+
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/08d4831d-38b9-494c-b1b9-e50ddfdc0317">
+</p>
+
+which equates to 833,333 Amps per second.
+
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/f655b470-a045-4c85-b845-ec76a566d687">
+</p>
+
+<h3 align="center"> 
+  FIG 2.
+</h3>
