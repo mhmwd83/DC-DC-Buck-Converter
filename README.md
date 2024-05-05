@@ -1,4 +1,4 @@
-<p align="center" height="100">
+<p align="center" height="500">
 <ins> Buck Converter Design </ins>
 </p> 
 
