@@ -90,3 +90,66 @@ which equates to 833,333 Amps per second.
 <h3 align="center"> 
   FIG 2.
 </h3>
+
+FIG 2 shows an LTspice simulation with the current ramping from 4.378A to 5.604A over 1.08us, a change of 1,135,185 Amps per second – not too far off what was calculated above.
+
+During discharge, the current ramps down from 5.604A to 4.378A, but over 1.438us, a change of 852,573A – close to what we calculated.
+
+The discrepancy in the above is because each MOSFET does not present a perfect short circuit and actually has about 50mV across it when fully activated.
+
+It is interesting to note that the value of di/dt is determined ONLY by the inductance value and the voltage across the inductor. The controller IC has nothing to do with setting the inductor ramp current.
+
+It is also useful to calculate the duty cycle of the converter. The duty cycle is the ratio of the ON time of the top MOSFET to the total period of oscillation.
+The inductor charges according to
+
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/08fec2d7-b5da-43eb-87df-85a27a7d64f2">
+</p>
+
+and discharges according to
+
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/6e8468b8-21be-4a9b-a310-3fc049a59c30">
+</p>
+
+(here dt1 is the ON time of the top MOSFET and dt2 is the ON time of the bottom MOSFET)
+In steady state, as can be seen in FIG 2 the charge current is equal to the discharge current, so
+
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/a1b19d91-5099-4633-a512-5b4e2c92d748">
+</p>
+
+From this we can see that
+
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/85fc654d-be07-4514-89ec-b730c3a6423b">
+</p>
+
+so
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/1e21f85a-9da5-4d26-9c9a-894cb78e6ae4">
+</p>
+
+so
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/88fb8443-fa0c-488b-b8f1-e558b228ffd3">
+</p>
+
+and if Duty Cycle (DC) is a ratio of dt1 to (dt1 +dt2) then
+
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/49f1220b-56c2-48e8-ba77-02ed527d8ab8">
+</p>
+
+So the duty cycle is equal to the ratio of Vout to Vin.
+
+It is interesting to note that the duty cycle is purely dependent on the input and output voltages and has nothing to do with the controller IC or inductor value.
+
+The above is true as long as the inductor current does not fall to zero. The converter is then said to be operating in continuous conduction mode (CCM). If the inductor current ramps down to zero, the converter is then in discontinuous conduction mode (DCM).
+
+In CCM if the load current changes, the duty cycle of the converter and the amplitude of the ripple current remain the same. The circuit responds to a change in load current by changing the midpoint of the inductor current (its dc offset). Indeed it is also true that the average inductor current in a buck converter is equal to the load current.
+
+In FIG 2 we can see that the midpoint of the inductor current is 5A and it can be seen from FIG 1 that our load is 1 Ohm, thus the load current is 5A. If the load resistance were increased to 2 Ohms, the ripple current and duty cycle would remain unchanged (in the steady state), but the dc offset current would fall to 2.5A.
+
+
+
