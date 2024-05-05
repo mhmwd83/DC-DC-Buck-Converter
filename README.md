@@ -52,4 +52,21 @@ where V is the voltage across the inductor and is equal to the output voltage (s
 
 The LTspice model of FIG 1 can be downloaded here (right click over the link and save as a '.asc' file): [LTC3854 buck converter](http://www.simonbramble.co.uk/dc_dc_converter_design/buck_converter/ltc3854_buck_converter.asc).
 
+The datasheet of the LTC3854 can be downloaded here: [LTC3854 datasheet](http://www.linear.com/product/LTC3854).
+
+Considering FIG1, the input voltage is 12V, the output voltage (in regulation) is 5V and the inductor value is 6uH
+
+Thus from
+
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/76f9eec1-c085-40f4-9174-21c19ff2a041">
+</p>
+
+we can determine that change in current when the inductor is charging is
+
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/2e2961be-6f20-4bce-a35d-d7ae9e8675be">
+</p>
+
+
 
