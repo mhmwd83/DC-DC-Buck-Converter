@@ -1,5 +1,5 @@
-<p align="center" height="500">
-<ins> Buck Converter Design </ins>
+<p align="center" >
+# <ins>Buck Converter Design 1</ins>
 </p> 
 
 ## Buck Converter Design
