@@ -10,7 +10,7 @@ Consider the circuit of FIG 1.
 
 ![image](https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/07f1d989-2a3d-40a4-9845-ac19e6008b19)
 
-                                                     **FIG 1**.
+**FIG 1**.
 
 The top MOSFET switches on creating a short circuit between the input voltage (IN) and the left hand side of the inductor, L1. The inductor current ramps up according to the equation
 
