@@ -26,17 +26,12 @@ The top MOSFET switches on creating a short circuit between the input voltage (I
 
 where V is the voltage <ins>across </ins> the inductor, L is the inductance value and di/dt is the <ins>change </ins> in current with time through the inductor. Thus with a fixed input voltage and a fixed output voltage, there is a fixed voltage across the inductor thus the change in current with time is constant (i.e. a ramp waveform).
 
- 
+The output voltage on startup is 0V, so the initial voltage across the inductor is equal to the input voltage. However, as the output voltage changes (and then reaches regulation) the above equation becomes.
 
-The output voltage on startup is 0V, so the initial voltage across the inductor is equal to the input voltage. However, as the output voltage changes (and then reaches regulation) the above equation becomes
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/44d7378b-939f-486c-b9eb-472a5df7c635">
+</p>
 
- 
-
-
-
- 
-
- 
 
 The peak inductor current is sensed by a small series resistor, R4, and when the voltage across this resistor equals a certain value (see the specific converter’s datasheet) the IC switches off the top MOSFET.
 
