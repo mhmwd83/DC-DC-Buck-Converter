@@ -16,7 +16,7 @@ Consider the circuit of FIG 1.
 
 The top MOSFET switches on creating a short circuit between the input voltage (IN) and the left hand side of the inductor, L1. The inductor current ramps up according to the equation
 
-<img  width="30" align="center" src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/225f0375-8c17-424e-b593-08932ac474ab">
+<img  width="50" align="center" src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/225f0375-8c17-424e-b593-08932ac474ab">
 
 where V is the voltage ***across*** the inductor, L is the inductance value and di/dt is the ***change*** in current with time through the inductor. Thus with a fixed input voltage and a fixed output voltage, there is a fixed voltage across the inductor thus the change in current with time is constant (i.e. a ramp waveform).
 
