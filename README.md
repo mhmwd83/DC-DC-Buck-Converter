@@ -266,9 +266,9 @@ When the inductor voltage flies negative, it is the body diode that conducts fir
 <img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/416bdd14-bf27-49bd-b48c-f2e4aa32b5d8">
 </p>
 
-<h3 align="center"> 
+<h4 align="center"> 
   FIG 4.
-</h3>
+</h4>
 We can see the switch node (V(sw)) falling to a voltage below zero well before the drive to the bottom MOSFET gate starts to rise. This is indicative of the body diode starting to conduct and indeed the negative voltage is approximately -0.6V. When the body diode conducts, it stores charge in the MOSFET that has to be removed before the MOSFET can fully turn on, so body diode conduction can affect the efficiency of the converter.
 
 If optimum efficiency is desired, it is wise to place a Schottky diode across the bottom MOSFET, so the Schottky diode can conduct the inductor flyback voltage and not the body diode. The resulting increase in efficiency can be as much as 3%. The Schottky diode will conduct the peak current flowing through the inductor, but this current will only flow for a short period of time (until the bottom MOSFET switches on). Therefore, the current rating of the diode can be a lot less than peak inductor current. An MBRS340 has a reverse voltage rating of 40V, but a non repetitive peak forward current of 40A.
@@ -280,3 +280,87 @@ For the bottom MOSFET, the Renesas RJK0301 has 2.3mOhms RDSON and a Qg of 32nC.
 <h4 align="center"> 
   <a href="http://www.simonbramble.co.uk/dc_dc_converter_design/buck_converter/rjk0301.pdf">RJK0301 Datasheet</a>
 </h4>
+
+### <ins>Output Capacitor Choice </ins>
+In continuous conduction mode, the capacitor has a continual current flowing into it from the inductor. Unlike a boost converter, the output capacitor in a buck regulator does not have to hold up the output while the inductor is being charged.
+
+The output is made up of 2 components: the ripple current from the inductor producing a voltage across the effective series resistance (ESR) of the output capacitor and the ripple current charging the output capacitor according to the equation
+
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/cf06917b-bbea-4d9b-8648-bdec04bb96ea">
+</p>
+
+Unlike a boost converter where the rectifier diode current jumps from 0A to the peak inductor current as the MOSFET switches off, the ripple in a buck architecture is determined by the ripple current amplitude, not the peak inductor current.
+
+Recent innovations in ceramic capacitor design mean that very low ESR capacitors are available with high capacitance values. Ceramic capacitors have a typical ESR of 10mOhms. Failing that, low ESR tantalum capacitors are available in much higher capacitance values with ESRs of upwards of 50m Ohms. Of course capacitors can also be paralleled to increase the capacitance and reduce the ESR.
+
+In our example the inductor ripple current is 800mA and the ESR of a typical tantalum capacitor is 70m Ohms, giving an ESR ripple of 56mV. Two such capacitors in parallel will yield an ESR ripple of 28mV.
+
+To calculate the charging ripple, from the equation above we can see
+
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/1eb07d5a-fede-4aae-9fbc-1927b91c169b">
+</p>
+
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/27c5e54e-32d3-4968-a686-b58d972865be">
+</p>
+
+<h4 align="center"> 
+  FIG 5.
+</h4>
+
+FIG5, shows the inductor ripple current (in blue), output voltage ripple (in green) and output capacitor current (in red). For convenience, the output capacitor ESR has been reduced to 0 Ohms to illustrate the ripple due to capacitor discharge. It can be seen that the capacitor current has the same amplitude as the inductor ripple current, but does not have the dc offset current (of approx. 5A). This is easy to picture, since the output current is equal to the average inductor current (i.e. a straight line drawn through the middle of the inductor current) and any current that does not flow into the load must flow in and out of the capacitor. To obtain the capacitor current, just subtract the output current.
+
+Now, we can see that while the capacitor current is positive (above the dotted white line) the output capacitor voltage goes up and while it is negative, the output capacitor voltage goes down. To work out the amplitude of the ripple voltage on the output capacitor, we must calculate the average of the positive part of the capacitor current (above the dotted white line). Since we know the peak to peak ripple current (is equal to the inductor ripple current), the peak ripple current is Iripple/2 and hence the average of this current (since half of the cycle is below zero) is Iripple/4. We can now work out the charging ripple.
+
+From
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/4f91bb01-2586-4ea1-b187-1e739c92916b">
+</p>
+
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/a3ed6e41-2b42-43da-adb4-c88d57a66395">
+</p>
+
+We can see that dt is equal to half the period, so we can say
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/1f1fe0b4-13e5-4685-8ba3-d704d8356833">
+</p>
+
+Since our capacitor current is positive for half the ON time and half the OFF time, the above equation holds true regardless of duty cycle.
+
+Let’s assume we want a total ripple voltage of 1% (50mV). We already have 28mV of ripple as a result of the capacitor ESR, so we now have a budget for the charging ripple of 22mV
+
+If our ripple current is 800mA and we are operating at a switching frequency of 535kHz, a capacitor of 8.5uF should suffice.
+
+Our ESR ripple calculations assumed two capacitors in parallel to reduce the ESR, so two 4.7uF capacitors with an ESR of 70mOhms should ensure we meet our total ripple budget of 50mV.
+
+### <ins>Other Points </ins>
+The feedback resistor values can be calculated using this spreadsheet:
+<h4 align="center"> 
+  <a href="http://www.simonbramble.co.uk/dc_dc_converter_design/feedback_resistor_calculator.htm">Feedback Resistor Calculator</a>
+</h4>
+
+A decoupling capacitor should also be placed on the input rail. The positive terminal of this capacitor should be situated physically close to the drain of the top MOSFET and the negative terminal close to the source of the bottom FET. When the MOSFETs switch, high changes in current occur at the input (probe the current into the drain of the top MOSFET to see this in LTspice). The input capacitor provides a local low impedance path for this current and helps improve EMC performance.
+
+If the circuit is sensitive to fast current changes on the input (if a radio transmitter, say, is connected to the input rail), using a [SEPIC converter](http://www.simonbramble.co.uk/dc_dc_converter_design/buck_boost_converter/sepic_buck_boost_converter_design.htm) in a buck only mode will give much quieter circuit operation.
+
+The final LTspice circuit can be downloaded here (right click over the link and save as a '.asc' file):
+
+
+<h4 align="center"> 
+  <a href="http://www.simonbramble.co.uk/dc_dc_converter_design/buck_converter/ltc3891_buck_converter.asc">LTC3891 Buck Converter</a>
+</h4>
+
+Running the simulation, it can be seen that the ripple current is 750mA, the switching frequency is 536kHz, the ON time is 401ns and the duty cycle is 21.6% (all measured using the cursors in LTspice). This ties in closely with what we have designed for. The output ripple was also measured at 30.7mV.  The ripple current and output voltage can be seen in FIG 6.
+
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/f5d98faa-5378-43ef-b754-ed710e9fa4a6">
+</p>
+
+<h4 align="center"> 
+  FIG 6.
+</h4>
+LTspice is a registered trademark of Linear Technology Corporation.
+
