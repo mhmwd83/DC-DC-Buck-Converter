@@ -198,13 +198,85 @@ We need to pick a 10uH inductor with a saturation current rating of at least 2.4
 if the inductor value falls, the current ramp increases causing the ferrite to further saturate, causing more current to flow… Therefore we must make sure that the inductor never saturates.
 
 Using the [Wurth Electronics Component Simulation Software](http://www.we-online.com/web/en/electronic_components/produkte_pb/redexpert/redexpert.php), we can see the 10uH, 3.5A saturation current 74404064100 is a good fit:
-<h3 align="center"> 
+<h4 align="center"> 
   <a href="http://www.simonbramble.co.uk/dc_dc_converter_design/buck_converter/74404064100.pdf">74404064100 datasheet</a>
-</h3>
+</h4>
 
 Regarding the placement of Wurth inductors on the PCB, the 'dot' on the inductor package represents the start of the winding. Therefore it is advisable to connect the dot end of the inductor closest to the FETs as this is the end that will undergo the most dv/dt and hence generate the most interference. If the non-dot end is connected to the output voltage (at dc) and the windings closest to the output voltage are wound over the dot end, they will give a degree of shielding to the inner (switched) end of the inductor.
 
 ### <ins>Rsense Calculation </ins>
+The sense resistor (R4 in FIG 3) senses the inductor current. The trip threshold on the current sense comparator in the case of the LTC3891 is 50mV (if the ILIM pin is tied to INTVCC), so a current sense resistor of 16mOhms should ensure that the peak current never rises above 3.1A – high enough that our peak current demands can be met, but lower than the saturation current of the inductor.
 
+### <ins>MOSFET Choice - General </ins>
+In nearly all applications the specification for the top MOSFET is different from that for the bottom MOSFET if maximum efficiency is to be achieved.
 
+Both MOSFETs will be exposed to the input voltage at some point during the switching cycle, so both must have a drain-source breakdown voltage of at least Vin. In our design, the input voltage is 24V, so a MOSFET rated with a breakdown voltage of at least 30V should suffice.
 
+The peak current will occur just as the top MOSFET switches off and the bottom MOSFET switches on and the same magnitude of current flows through both devices. Our current sense resistor sets the peak current to 3.1A, so any MOSFET with a peak current greater than 5A is suitable.
+
+Looking at the block diagram of the LTC3891, we see that the drive circuitry for the bottom MOSFET is powered from INTVCC. The minimum voltage specification on this voltage is 4.85V, so our bottom MOSFET must have a gate turn on voltage of significantly less than 4.85V. However, the drive to the top MOSFET is powered from INTVCC – 0.3V (the voltage across the flying capacitor) so the turn on voltage of the top MOSFET needs to be significantly less than 4.55V. In either case, a logic level MOSFET, with a turn on voltage of 1V - 2V is suitable.
+
+The above parameters represent the bare minimum characteristics of the MOSFETs. However, to get a good design, we must ensure that the losses in the MOSFETs are as low as possible.
+
+### <ins>MOSFET Choice – Switching and Conduction Losses </ins>
+The MOSFETs present two losses in the circuit: switching losses and conduction losses.
+
+The switching losses result from current flowing through the MOSFET at the same time that a voltage is across the MOSFET (so power is generated in the MOSFET), during the turn on and turn off times of the MOSFET. For a given gate drive coming out of the controller IC, the lower the Gate-Source capacitance of the MOSFET, the quicker the MOSFET will turn on. Thus the Qg specification of the MOSFET is important and should be as low as possible. The Qg of the MOSFET will also have an impact on the heat dissipation of the chip, especially if the input voltage to the chip is high.
+Charge is dictated by the equation:
+<h6 align="center"> 
+  Charge (Q) = Current (I) x Time (s).
+</h6>
+
+Since Frequency is the inverse of Time, we can write
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/4142fe18-6fa5-4404-9bbe-868fcabcda86">
+</p>
+
+So we can calculate the current needed to flow into the chip, just to charge the gate capacitance of the FETs. Since heat is the product of voltage and current, if the gate charge is high and/or the switching frequency is high, the heat dissipation in the chip will be high if the input voltage is high.
+
+Once the MOSFET has switched on, the MOSFET presents a small dc resistance between its Drain and Source terminals. This is the MOSFETs ‘Drain Source ON resistance’ or RDSON. Again, this needs to be as low as possible.
+
+Now, MOSFET manufacturers reduce the ON resistance of the MOSFET by constructing many parallel conduction paths between the Drain and Source. Thus, like connecting resistors in parallel, the ON resistance comes down with more parallel paths. However, in connecting Drain Source paths in parallel, a negative effect is that the Gate Source capacitance (Qg) is also connected in parallel, so a low ON resistance (and hence low conduction loss) sometimes implies a high gate source capacitance (hence high switching loss). Thus the MOSFET that is chosen should be a compromise between these two characteristics. In addition, high current MOSFETs tend to come in much larger packages, so meeting the ideals of low ON resistance and low Qg might violate a space requirement spec, so the selection process has to start over. Engineering, as ever, is a compromise.
+
+Indeed looking at the selection tables of the MOSFET manufacturers, it is better to select a MOSFET with a low ON resistance (less than 10mOhms), then filter this selection to remove MOSFETs with a Qg of greater than 10nC, then select a MOSFET from this list, as long as the Gate turn on voltage, Vds and Id can be met. Starting by selecting MOSFETs with a Vds of between 20V and 30V might rule out some higher voltage FETs that are better suited to lower voltage designs. Failing that, download all the results to a spreadsheet and sort from there. I have never had much luck with the parametric searches on MOSFET websites.
+
+Alternatively, download all the MOSFET characteristics into a spreadsheet, remove the ones that don't meet the VDS and ID requirements, then add a column called FOM (Figure of Merit). This column should contain the value RDSON x QG. Then sort by this column and pick the FET with the lowest FOM. This part will be the best compromise between RDSON and QG and ideal for the top MOSFET.
+
+Just to further complicate matters, if the application has a high input voltage and a low output voltage, the duty cycle will be low. Therefore the ON resistance of the top FET will be less important since the top FET will only be on for a short period of time. The lower the duty cycle, the less important ON resistance becomes. I designed a 12V to 1V buck converter where I spent ages picking the top FET to balance Qg and RDSON, only to get an efficiency of 84%. Changing the top FET to a low Qg one regardless of RDSON (it was about 65mOhms) increased the efficiency to 94%.
+
+### <ins>MOSFET Choice – Top MOSFET </ins>
+The Duty Cycle governs how long the top MOSFET switches on for during each period of the switching frequency. We have calculated that the duty cycle is dictated by the ratio of Vout to Vin (for a buck converter operating in continuous conduction mode). So it can be argued that if the input voltage is high and the output voltage is low (i.e. a low duty cycle), conduction losses in the top MOSFET are not important since the top MOSFET is only ON for a short amount of time. Therefore for low duty cycle circuits, a MOSFET with low Qg should be chosen, almost regardless of RDSON. Although there is no figure as to what constitutes a low duty cycle, any circuit with a duty cycle of less than about 15% warrants having its MOSFET optimised for low Qg with RDSON being largely unimportant.
+
+That said, our duty cycle is 21%, so unfortunately we should strive to find a MOSFET with both low Qg and low ON resistance.
+
+Luckily the suggested LTspice circuit for the LTC3891 comes with an extremely good top MOSFET, the Renesas RJK0305. This device has an RDSON of 6.7mOhms and a Qg of 8nC.
+
+<h4 align="center"> 
+  <a href="http://www.simonbramble.co.uk/dc_dc_converter_design/buck_converter/rjk0305.pdf">RJK0305 Datasheet</a>
+</h4>
+
+### <ins>MOSFET Choice – Bottom MOSFET </ins>
+When the top MOSFET switches off, the voltage at the left hand side of the inductor flies negative, thus the voltage across the bottom MOSFET is nearly zero when the bottom MOSFET switches on. Therefore the switching losses of the bottom MOSFET are negligible, so we do not have to worry about the Qg specification of the bottom MOSFET. Only the RDSON characteristic of the bottom MOSFET is important.
+
+In fact, every MOSFET has a ‘body diode’. This is a diode inherent in the structure of the MOSFET and in an N channel FET, its anode is connected to the source and the cathode is connected to the Drain.
+
+When the inductor voltage flies negative, it is the body diode that conducts first before the gate drive to the MOSFET activates the Drain-Source channel. FIG 4 shows a simulation of the switch node just as the bottom MOSFET is switching on.
+
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/416bdd14-bf27-49bd-b48c-f2e4aa32b5d8">
+</p>
+
+<h3 align="center"> 
+  FIG 4.
+</h3>
+We can see the switch node (V(sw)) falling to a voltage below zero well before the drive to the bottom MOSFET gate starts to rise. This is indicative of the body diode starting to conduct and indeed the negative voltage is approximately -0.6V. When the body diode conducts, it stores charge in the MOSFET that has to be removed before the MOSFET can fully turn on, so body diode conduction can affect the efficiency of the converter.
+
+If optimum efficiency is desired, it is wise to place a Schottky diode across the bottom MOSFET, so the Schottky diode can conduct the inductor flyback voltage and not the body diode. The resulting increase in efficiency can be as much as 3%. The Schottky diode will conduct the peak current flowing through the inductor, but this current will only flow for a short period of time (until the bottom MOSFET switches on). Therefore, the current rating of the diode can be a lot less than peak inductor current. An MBRS340 has a reverse voltage rating of 40V, but a non repetitive peak forward current of 40A.
+<h4 align="center"> 
+  <a href="http://www.simonbramble.co.uk/dc_dc_converter_design/buck_converter/MBRS340.pdf">MBRS340 Datasheet</a>
+</h4>
+
+For the bottom MOSFET, the Renesas RJK0301 has 2.3mOhms RDSON and a Qg of 32nC.
+<h4 align="center"> 
+  <a href="http://www.simonbramble.co.uk/dc_dc_converter_design/buck_converter/rjk0301.pdf">RJK0301 Datasheet</a>
+</h4>
