@@ -362,5 +362,4 @@ Running the simulation, it can be seen that the ripple current is 750mA, the swi
 <h4 align="center"> 
   FIG 6.
 </h4>
-LTspice is a registered trademark of Linear Technology Corporation.
 
