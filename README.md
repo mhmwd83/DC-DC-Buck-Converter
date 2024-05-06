@@ -1,7 +1,7 @@
 # <ins>Buck Converter Design </ins>
 
 
-## Buck Converter Design
+## <ins>Buck Converter Design </ins>
 Before reading this section, please read the [Introduction](http://www.simonbramble.co.uk/dc_dc_converter_design/dc_dc_converter_design.htm).
 
 All of the circuits in this tutorial can be simulated in LTspice®. If you are new to LTspice, please have a look at my LTspice Tutorial
@@ -150,6 +150,61 @@ The above is true as long as the inductor current does not fall to zero. The con
 In CCM if the load current changes, the duty cycle of the converter and the amplitude of the ripple current remain the same. The circuit responds to a change in load current by changing the midpoint of the inductor current (its dc offset). Indeed it is also true that the average inductor current in a buck converter is equal to the load current.
 
 In FIG 2 we can see that the midpoint of the inductor current is 5A and it can be seen from FIG 1 that our load is 1 Ohm, thus the load current is 5A. If the load resistance were increased to 2 Ohms, the ripple current and duty cycle would remain unchanged (in the steady state), but the dc offset current would fall to 2.5A.
+
+## <ins>Buck Converter Design Procedure </ins>
+We are going to use the LTC3891 to design a buck converter that converts from 24V to 5V and can supply a load of 2A. The LTC3891 datasheet can be downloaded here:[LTC3891 Datasheet](http://www.linear.com/product/LTC3891)
+
+The outline schematic is shown in FIG 3
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/2df7cfd6-e28a-4bf5-b3cd-20761e3b405d">
+</p>
+
+<h3 align="center"> 
+  FIG 3.
+</h3>
+
+With a 24V input and a 5V output, the duty cycle of the converter is
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/11a212d8-89b7-475c-886b-040f4db5acc0">
+</p>
+
+The LTC3891 has a selectable fixed frequency operation. Tying the FREQ pin to INTVCC (see datasheet) sets the frequency to 535kHz, thus a switching period of 1.87us. Thus the ON time of the top MOSFET will be 21% of 1.87us, or 389ns. At this point it is wise to check that the converter has a minimum ON time of less than 389ns. The LTC3891 has a minimum ON time of 95ns, so we are well within spec.
+
+If the input voltage is very close to the output voltage, the duty cycle will be very high. In this case, it is worth checking that the calculated duty cycle does not violate the maximum duty cycle spec of the part. In any dc/dc converter with a high side N channel MOSFET (Q1 in FIG1), the bottom MOSFET must switch on to enable the flying capacitor (C6 in FIG1) to refresh and it is this refresh cycle that determines the maximum duty cycle of the converter.
+
+### <ins>Inductor Choice </ins>
+
+It is good design practice to keep the inductor ripple current (di) to about 40% of the output current, so with a 2A load this implies a ripple current of 800mA. Increasing the ripple current increases the switching losses and output ripple, but means we can use a smaller value and size of inductor. Decreasing the ripple current means the circuit will be less responsive to load transients.
+
+The current ramp in the inductor during charging is represented by
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/88455287-5766-4dce-9462-354eed947b5c">
+</p>
+
+We know Vin, Vout, dt1 and the inductor ripple, di, so can work out the optimum inductor value.  
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/b6cbd1cc-bffe-4ba3-9e05-fe4d061d11b1">
+</p>
+
+which implies and inductor value of 9.24uH. A 10uH inductor should be suitable.
+
+We know that the average inductor current is equal to the output current, so our peak inductor current is equal to the output current plus half the ripple current. For a 2A load, the peak inductor current will be 2.4A.
+
+We need to pick a 10uH inductor with a saturation current rating of at least 2.4A. If too much current flows in the inductor, the ferrite that the inductor is wound on saturates and the inductor loses its inductive properties causing the inductor value to fall. From the equation
+<p align="center">
+<img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/7f5a171f-3af0-4559-932e-e1625c22080d">
+</p>
+
+if the inductor value falls, the current ramp increases causing the ferrite to further saturate, causing more current to flow… Therefore we must make sure that the inductor never saturates.
+
+Using the [Wurth Electronics Component Simulation Software](http://www.we-online.com/web/en/electronic_components/produkte_pb/redexpert/redexpert.php), we can see the 10uH, 3.5A saturation current 74404064100 is a good fit:
+<h3 align="center"> 
+  [74404064100 datasheet.](http://www.simonbramble.co.uk/dc_dc_converter_design/buck_converter/74404064100.pdf)
+</h3>
+
+Regarding the placement of Wurth inductors on the PCB, the 'dot' on the inductor package represents the start of the winding. Therefore it is advisable to connect the dot end of the inductor closest to the FETs as this is the end that will undergo the most dv/dt and hence generate the most interference. If the non-dot end is connected to the output voltage (at dc) and the windings closest to the output voltage are wound over the dot end, they will give a degree of shielding to the inner (switched) end of the inductor.
+
+### <ins>Rsense Calculation </ins>
 
 
 
