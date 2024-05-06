@@ -152,7 +152,7 @@ In CCM if the load current changes, the duty cycle of the converter and the ampl
 In FIG 2 we can see that the midpoint of the inductor current is 5A and it can be seen from FIG 1 that our load is 1 Ohm, thus the load current is 5A. If the load resistance were increased to 2 Ohms, the ripple current and duty cycle would remain unchanged (in the steady state), but the dc offset current would fall to 2.5A.
 
 ## <ins>Buck Converter Design Procedure </ins>
-We are going to use the LTC3891 to design a buck converter that converts from 24V to 5V and can supply a load of 2A. The LTC3891 datasheet can be downloaded here:[LTC3891 Datasheet](http://www.linear.com/product/LTC3891)
+We are going to use the LTC3891 to design a buck converter that converts from 24V to 5V and can supply a load of 2A. The LTC3891 datasheet can be downloaded here: [LTC3891 Datasheet](http://www.linear.com/product/LTC3891)
 
 The outline schematic is shown in FIG 3
 <p align="center">
@@ -199,7 +199,7 @@ if the inductor value falls, the current ramp increases causing the ferrite to f
 
 Using the [Wurth Electronics Component Simulation Software](http://www.we-online.com/web/en/electronic_components/produkte_pb/redexpert/redexpert.php), we can see the 10uH, 3.5A saturation current 74404064100 is a good fit:
 <h3 align="center"> 
-  [74404064100 datasheet.](http://www.simonbramble.co.uk/dc_dc_converter_design/buck_converter/74404064100.pdf)
+  <a href="http://www.simonbramble.co.uk/dc_dc_converter_design/buck_converter/74404064100.pdf">74404064100 datasheet</a>
 </h3>
 
 Regarding the placement of Wurth inductors on the PCB, the 'dot' on the inductor package represents the start of the winding. Therefore it is advisable to connect the dot end of the inductor closest to the FETs as this is the end that will undergo the most dv/dt and hence generate the most interference. If the non-dot end is connected to the output voltage (at dc) and the windings closest to the output voltage are wound over the dot end, they will give a degree of shielding to the inner (switched) end of the inductor.
