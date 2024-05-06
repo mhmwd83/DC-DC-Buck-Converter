@@ -13,7 +13,6 @@ Consider the circuit of FIG 1.
 <p align="center">
 <img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/07f1d989-2a3d-40a4-9845-ac19e6008b19">
 </p> 
-
 <h3 align="center"> 
   FIG 1.
 </h3>
@@ -86,7 +85,6 @@ which equates to 833,333 Amps per second.
 <p align="center">
 <img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/f655b470-a045-4c85-b845-ec76a566d687">
 </p>
-
 <h3 align="center"> 
   FIG 2.
 </h3>
@@ -158,7 +156,6 @@ The outline schematic is shown in FIG 3
 <p align="center">
 <img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/2df7cfd6-e28a-4bf5-b3cd-20761e3b405d">
 </p>
-
 <h3 align="center"> 
   FIG 3.
 </h3>
@@ -265,7 +262,6 @@ When the inductor voltage flies negative, it is the body diode that conducts fir
 <p align="center">
 <img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/416bdd14-bf27-49bd-b48c-f2e4aa32b5d8">
 </p>
-
 <h4 align="center"> 
   FIG 4.
 </h4>
@@ -305,7 +301,6 @@ To calculate the charging ripple, from the equation above we can see
 <p align="center">
 <img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/27c5e54e-32d3-4968-a686-b58d972865be">
 </p>
-
 <h4 align="center"> 
   FIG 5.
 </h4>
@@ -358,7 +353,6 @@ Running the simulation, it can be seen that the ripple current is 750mA, the swi
 <p align="center">
 <img src="https://github.com/mhmwd83/DC-DC-Buck-Converter/assets/96796504/f5d98faa-5378-43ef-b754-ed710e9fa4a6">
 </p>
-
 <h4 align="center"> 
   FIG 6.
 </h4>
